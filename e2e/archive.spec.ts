@@ -20,25 +20,39 @@ test("35-question flow, result, PNG download, and mobile overflow", async ({ pag
     await expect(image).toHaveAttribute("alt", `${virtue.name}｜${virtue.title}人物肖像`);
     await expect(image.evaluate(element => (element as HTMLImageElement).naturalWidth > 0)).resolves.toBe(true);
   }
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.getByRole("button", { name: /开始探索/ }).click();
+  await expect(page.getByText(/档案记录 ·\s*01\s*\/\s*35/)).toBeVisible();
   for (const viewport of [{ width: 375, height: 812 }, { width: 390, height: 844 }, { width: 430, height: 932 }]) {
     await page.setViewportSize(viewport);
-    let size = await page.evaluate(() => ({ width: document.documentElement.clientWidth, scroll: document.documentElement.scrollWidth }));
+    const size = await page.evaluate(() => ({ width: document.documentElement.clientWidth, scroll: document.documentElement.scrollWidth }));
     expect(size.scroll).toBeLessThanOrEqual(size.width);
-    await page.getByRole("button", { name: /开始探索/ }).click();
-    await expect(page.getByText(/档案记录 ·\s*01\s*\/\s*35/)).toBeVisible();
     await expect(page.locator("button.option")).toHaveCount(4);
     const optionBox = await page.locator("button.option").first().boundingBox();
     expect(optionBox?.height).toBeGreaterThanOrEqual(44);
-    const textSizes = await page.evaluate(() => ({ prompt: getComputedStyle(document.querySelector(".question-prompt")!).fontSize, option: getComputedStyle(document.querySelector("button.option")!).fontSize }));
-    expect(textSizes).toEqual({ prompt: "20px", option: "16px" });
-    await page.getByRole("button", { name: /返回首页/ }).click();
-    size = await page.evaluate(() => ({ width: document.documentElement.clientWidth, scroll: document.documentElement.scrollWidth }));
-    expect(size.scroll).toBeLessThanOrEqual(size.width);
+    const textSizes = await page.evaluate(() => ({ prompt: getComputedStyle(document.querySelector(".question-prompt")!).fontSize, option: getComputedStyle(document.querySelector("button.q-option")!).fontSize }));
+    expect(textSizes).toEqual({ prompt: viewport.width === 375 ? "22px" : "23px", option: "17px" });
+    const optionStyles = await page.locator("button.q-option").first().evaluate(element => ({ borderStyle: getComputedStyle(element).borderStyle, borderColor: getComputedStyle(element).borderColor, minHeight: getComputedStyle(element).minHeight, userSelect: getComputedStyle(element).userSelect }));
+    expect(optionStyles.borderStyle).toBe("solid");
+    expect(optionStyles.borderColor).not.toBe("rgba(0, 0, 0, 0)");
+    expect(parseFloat(optionStyles.minHeight)).toBeGreaterThanOrEqual(56);
+    expect(optionStyles.userSelect).toBe("none");
+    await page.locator("button.q-option").nth(0).click();
+    await page.getByRole("button", { name: "上一题" }).click();
+    await expect(page.locator("button.q-option").nth(0)).toHaveAttribute("aria-pressed", "true");
+    await expect(page.locator("button.q-option").nth(0).locator(".q-option-check")).toBeVisible();
+    await page.locator("button.q-option").nth(1).click();
+    await page.getByRole("button", { name: "上一题" }).click();
+    await expect(page.locator("button.q-option").nth(1)).toHaveAttribute("aria-pressed", "true");
+    expect(await page.evaluate(() => getSelection()?.toString())).toBe("");
   }
+  await page.getByRole("button", { name: /返回首页/ }).click();
+  await page.evaluate(() => localStorage.removeItem("sins-answers"));
+  await page.reload();
   await page.setViewportSize({ width: 1280, height: 900 });
   await page.getByRole("button", { name: /开始探索/ }).click();
-  const desktopTextSizes = await page.evaluate(() => ({ prompt: getComputedStyle(document.querySelector(".question-prompt")!).fontSize, option: getComputedStyle(document.querySelector("button.option")!).fontSize }));
-  expect(desktopTextSizes).toEqual({ prompt: "24px", option: "18px" });
+  const desktopTextSizes = await page.evaluate(() => ({ prompt: getComputedStyle(document.querySelector(".question-prompt")!).fontSize, option: getComputedStyle(document.querySelector("button.q-option")!).fontSize }));
+  expect(desktopTextSizes).toEqual({ prompt: "25.6px", option: "17px" });
   for (let i = 0; i < 35; i++) {
     await expect(page.getByText(new RegExp(`档案记录 ·\\s*${String(i + 1).padStart(2, "0")}\\s*/\\s*35`))).toBeVisible();
     await expect(page.locator("button.option")).toHaveCount(4);

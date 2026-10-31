@@ -5,6 +5,16 @@
 .btn,.option{transition:color .25s ease,border-color .25s ease,background-color .25s ease,box-shadow .25s ease,transform .2s ease}
 .btn:hover{color:#0d0b08;box-shadow:0 0 22px #c5a36a22}.btn:active,.option:active{transform:scale(.985)}
 .option:hover{border-color:#c5a36a99;box-shadow:0 0 16px #c5a36a12}
+.question-prompt{font-size:clamp(22px,2vw,27px);line-height:1.6;font-weight:500;overflow-wrap:anywhere}
+.q-option{display:flex;width:100%;min-height:56px;align-items:center;justify-content:space-between;gap:14px;padding:16px 18px;text-align:left;font-size:17px;line-height:1.6;overflow-wrap:anywhere;user-select:none;-webkit-user-select:none;touch-action:manipulation;border:1px solid #a98a55;background:linear-gradient(110deg,#191515,#171313);box-shadow:inset 0 1px #c5a36a12}
+.q-option:hover{border-color:#d0ae70;background:#241c18;box-shadow:0 0 16px #c5a36a18}
+.q-option[aria-pressed="true"]{border-color:#e0bd7c;background:linear-gradient(110deg,#3b2921,#2a1c1b);box-shadow:inset 0 0 0 1px #c5a36a55,0 0 18px #c5a36a25}
+.q-option:active{filter:brightness(1.12);transform:scale(.992)}
+.q-option-check{display:grid;width:24px;height:24px;flex:0 0 24px;place-items:center;border:1px solid #c5a36a66;border-radius:50%;color:#e0bd7c;opacity:0;transform:scale(.82);transition:opacity .18s ease,transform .18s ease}
+.q-option[aria-pressed="true"] .q-option-check{opacity:1;transform:scale(1);background:#c5a36a20}
+.q-option:focus-visible{outline:2px solid #e0bd7c;outline-offset:3px}
+@media(max-width:767px){.question-prompt{font-size:23px}.q-option{font-size:17px;padding:16px 17px;min-height:60px}}
+@media(max-width:380px){.question-prompt{font-size:22px}}
 .portrait-card{transition:transform .55s ease,border-color .55s ease,box-shadow .55s ease}.portrait-card:hover{transform:translateY(-4px);border-color:#c5a36a77;box-shadow:0 12px 36px #0008,0 0 18px #c5a36a18}.portrait-card img{transition:transform .8s cubic-bezier(.2,.7,.2,1)}.portrait-card:hover img{transform:scale(1.03)}
 .reveal-decrypt{animation:revealFade .8s ease both}.seal{font-size:clamp(5rem,18vw,9rem);animation:sealAppear 1.4s ease both;text-shadow:0 0 28px #c5a36a40}.flip-scene{perspective:1400px;width:min(76vw,360px);height:min(114vw,540px);max-height:62vh;min-height:320px}.flip-card{position:relative;width:100%;height:100%;transform-style:preserve-3d;animation:flipReveal 1.08s cubic-bezier(.2,.72,.18,1) both}.flip-face{position:absolute;inset:0;overflow:hidden;border:1px solid #c5a36a99;backface-visibility:hidden;-webkit-backface-visibility:hidden;box-shadow:0 15px 45px #0009,0 0 24px #c5a36a24}.flip-front{display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse,#35191f,#0c0b0b 72%)}.flip-back{transform:rotateY(180deg);background:#0c0b0b}.flip-back img{object-position:center 20%}.flip-caption{position:absolute;inset:auto 0 0;padding:58px 20px 20px;text-align:left;background:linear-gradient(transparent,#0b0909f2 35%)}
 .reveal-radar{transform-box:fill-box;transform-origin:center;animation:radarBloom 1.5s cubic-bezier(.2,.7,.2,1) both}.reveal-radar-svg text{animation:revealFade .5s ease both}.reveal-radar-svg circle{animation:pointAppear .45s ease both}
